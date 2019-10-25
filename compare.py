@@ -10,6 +10,11 @@ scrutinizer_requester = Requester(
     hostname="example.scrutinizer.com"
 )
 
+report_filters = {
+     "sdfDips_0": "in_GROUP_ALL",
+     "sdfIPGroups_0": "in_16900046_Both"
+}
+
 report_params = ReportAPI()
 #find all available groups with their ID's and create object with id's and group name
 def get_groups():
@@ -150,10 +155,7 @@ exporter_hash = get_exporters_for_groups(group_list)
 #run all interfaces report without a filter. Apply group name as part of results. 
 top_interfaces_unfiltered = top_interfaces_report(exporter_hash)
 # print(top_interfaces_unfiltered)
-report_filters = {
-     "sdfDips_0": "in_GROUP_ALL",
-     "sdfIPGroups_0": "in_16900046_Both"
-}
+
 top_interfaces_filtered = top_interfaces_report(exporter_hash,report_filters)
 
 merged_data = compare_interface_reports(top_interfaces_unfiltered, top_interfaces_filtered)
