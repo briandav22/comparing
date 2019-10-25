@@ -127,8 +127,15 @@ class Requester:
 
     def verify_https(self, response, params):
         # used so the user doesn't have to worry about the URL to Scrutinizer, only the hostname.
+ 
         try:
             if response.history[0].status_code == 302:
+
+                r = requests.get(
+                    "https://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
+                return r
+            elif response.status_code == 404:
+
                 r = requests.get(
                     "https://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
                 return r
@@ -154,11 +161,12 @@ class Requester:
 
         # make request to Scrutinizer
         data_back = requests.get(
-            "https://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
+            "http://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
+
 
         # check to see if user is using HTTPS, if they are, make request to HTTPS address.
-        # response = self.verify_https(data_back, params)
-        
+        response = self.verify_https(data_back, params)
+
         # convert response to JSON.
         response = data_back.json()
 

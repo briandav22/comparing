@@ -10,6 +10,7 @@ scrutinizer_requester = Requester(
     hostname="example.scrutinizer.com"
 )
 
+
 report_filters = {
      "sdfDips_0": "in_GROUP_ALL",
      "sdfIPGroups_0": "in_16900046_Both"
