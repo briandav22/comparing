@@ -13,9 +13,9 @@ class ReportAPI:
 
             "reportTypeLang": "conversationsApp",
             "reportDirections": {"selected": "inbound"},
-            "dataGranularity": {"selected": "auto"},
+            "dataGranularity": {"selected": "5"},
             "orderBy": "sum_octetdeltacount",
-            "times": {"dateRange": "LastTenMinutes"},
+            "times": {"dateRange": "LastHour"},
             "filters": {
                         "sdfDips_0": "in_GROUP_ALL"
                     },
@@ -40,9 +40,9 @@ class ReportAPI:
     def report_options(self,
                     reportTypeLang="conversationsApp",
                     reportDirections= "inbound",
-                    dataGranularity="auto",
+                    dataGranularity="5",
                     orderBy="sum_octetdeltacount",
-                    times={"dateRange": "LastTenMinutes"},
+                    times={"dateRange": "LastHour"},
                     filters={
                         "sdfDips_0": "in_GROUP_ALL"
                     },
@@ -77,6 +77,11 @@ class ReportAPI:
             }
         }
 
+    def get_ipgroup_name(self):
+        self.params = {
+            "rm":"get_known_objects",
+            "type":"ipgroups"
+        }
 
     def make_object(self):
         self.params = {
@@ -127,7 +132,7 @@ class Requester:
 
     def verify_https(self, response, params):
         # used so the user doesn't have to worry about the URL to Scrutinizer, only the hostname.
- 
+        print(response.history)
         try:
             if response.history[0].status_code == 302:
 
@@ -159,13 +164,16 @@ class Requester:
         # add authToken to the Params
         params['authToken'] = self.authToken
 
+
         # make request to Scrutinizer
         data_back = requests.get(
-            "http://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
+            "https://{}/fcgi/scrut_fcgi.fcgi?".format(self.hostname), params=params, verify=False)
 
+
+ 
 
         # check to see if user is using HTTPS, if they are, make request to HTTPS address.
-        response = self.verify_https(data_back, params)
+        # response = self.verify_https(data_back, params)
 
         # convert response to JSON.
         response = data_back.json()
